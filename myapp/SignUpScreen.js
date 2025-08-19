@@ -1,25 +1,25 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 
-export default function LoginScreen({ navigation }) {
+export default function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, senha);
+      await createUserWithEmailAndPassword(auth, email, senha);
       navigation.replace("Home");
     } catch (error) {
-      setErro("Erro ao entrar: " + error.message);
+      setErro("Erro ao cadastrar: " + error.message);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Cadastro</Text>
 
       <TextInput
         style={styles.input}
@@ -29,7 +29,7 @@ export default function LoginScreen({ navigation }) {
       />
       <TextInput
         style={styles.input}
-        placeholder="Senha"
+        placeholder="Senha (min 6 caracteres)"
         secureTextEntry
         value={senha}
         onChangeText={setSenha}
@@ -37,11 +37,7 @@ export default function LoginScreen({ navigation }) {
 
       {erro ? <Text style={styles.error}>{erro}</Text> : null}
 
-      <Button title="Entrar" onPress={handleLogin} />
-
-      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
-        <Text style={styles.link}>Não tem conta? Cadastre-se</Text>
-      </TouchableOpacity>
+      <Button title="Cadastrar" onPress={handleSignUp} />
     </View>
   );
 }
@@ -51,5 +47,4 @@ const styles = StyleSheet.create({
   title: { fontSize: 28, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
   input: { borderWidth: 1, borderColor: "#ccc", padding: 12, marginBottom: 15, borderRadius: 8 },
   error: { color: "red", marginBottom: 10, textAlign: "center" },
-  link: { color: "blue", marginTop: 15, textAlign: "center" },
 });
